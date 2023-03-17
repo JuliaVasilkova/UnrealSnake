@@ -1,8 +1,18 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.0",
+	"EngineAssociation": "{6547FF25-443E-7AC6-3D22-08AA109F3843}",
 	"Category": "",
 	"Description": "",
+	"Modules": [
+		{
+			"Name": "UnrealSnake",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	],
 	"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",
