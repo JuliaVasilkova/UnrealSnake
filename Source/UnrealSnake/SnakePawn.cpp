@@ -32,22 +32,14 @@ ASnakePawn::ASnakePawn()
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->TargetArmLength = 500.f;
 
+	//Last added tail element location by default is head location
+	LastAddedTransform = GetActorTransform();
 }
 
 // Called when the game starts or when spawned
 void ASnakePawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-//	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
-//	{
-//		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
-//		{
-//			Subsystem->ClearAllMappings();
-//			Subsystem->AddMappingContext(PawnInputMappingContext, 0);
-//		}
-//	}
-//	
 }
 
 // Called every frame
@@ -64,5 +56,54 @@ void ASnakePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+int32 ASnakePawn::GetScores()
+{
+	return Scores;
+}
+
+
+//Precess of eating food and adding scores
+void ASnakePawn::EatFood()
+{
+	AddTailElement();
+	UpdateScores();
+}
+
+void ASnakePawn::AddTailElement()
+{
+	if (IsValid(TailElementToSpawn) && GetWorld())
+	{
+		LastAddedElement = GetWorld()->SpawnActor<ATailElement>(TailElementToSpawn, GetElementTransform());
+		TailElements.Add(LastAddedElement);
+	}
+}
+
+FTransform ASnakePawn::GetElementTransform()
+{
+	int32 StepSize = 60;
+
+	if (isFirst)
+	{
+		isFirst = false;
+	}
+	else
+	{
+		if (LastAddedElement)
+		{
+			LastAddedTransform = LastAddedElement->GetActorTransform();
+			
+			FVector NewLocation = LastAddedTransform.GetLocation() - GetActorForwardVector() * StepSize;
+			LastAddedTransform.SetLocation(FVector(NewLocation.X, NewLocation.Y, 30));
+		}
+
+	}
+	return LastAddedTransform;
+}
+
+void ASnakePawn::UpdateScores()
+{
+	Scores++;
 }
 

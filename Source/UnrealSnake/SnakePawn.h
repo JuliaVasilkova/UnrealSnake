@@ -9,9 +9,11 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "TailElement.h"
+
 #include "SnakePawn.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class UNREALSNAKE_API ASnakePawn : public APawn
 {
 	GENERATED_BODY()
@@ -40,11 +42,44 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UFloatingPawnMovement* MoveComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		int32 Scores =  0;
+
+	// All the elements in snake's tail
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
+		TArray<ATailElement*> TailElements;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
+		bool isFirst = true;
+
+	// Location of last added tail element
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
+		FTransform LastAddedTransform;
+
+	// Location of last added tail element
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
+		ATailElement* LastAddedElement = NULL;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
+		TSubclassOf<ATailElement> TailElementToSpawn;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateScores();
 
+	UFUNCTION(BlueprintCallable)
+	int32 GetScores();
+
+	UFUNCTION(BlueprintCallable)
+	void EatFood();
+
+	void AddTailElement();
+
+	FTransform GetElementTransform();
 };
