@@ -46,9 +46,10 @@ void ASnakePawn::BeginPlay()
 void ASnakePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-
-
+	 
+	//Logic of tail movement
+	SnakePrevLocation = GetActorLocation();
+	MoveTail();
 }
 
 // Called to bind functionality to input
@@ -70,7 +71,9 @@ void ASnakePawn::EatFood()
 	AddTailElement();
 	UpdateScores();
 }
-
+ 
+//After "eating" food element we should add a new tailElement to out snake's tail
+//So, we spawn it
 void ASnakePawn::AddTailElement()
 {
 	if (IsValid(TailElementToSpawn) && GetWorld())
@@ -80,9 +83,9 @@ void ASnakePawn::AddTailElement()
 	}
 }
 
+//Returns new transform for our newly added element
 FTransform ASnakePawn::GetElementTransform()
 {
-	int32 StepSize = 60;
 
 	if (isFirst)
 	{
@@ -100,6 +103,15 @@ FTransform ASnakePawn::GetElementTransform()
 
 	}
 	return LastAddedTransform;
+}
+
+void ASnakePawn::MoveTail()
+{
+	for (auto element: TailElements)
+	{
+		FVector NewLocation = SnakePrevLocation - ((SnakePrevLocation - GetActorLocation()).Normalize() * StepSize);
+		element->SetActorLocation(NewLocation);
+	}
 }
 
 void ASnakePawn::UpdateScores()

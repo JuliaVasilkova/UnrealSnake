@@ -13,7 +13,7 @@
 
 #include "SnakePawn.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS()
 class UNREALSNAKE_API ASnakePawn : public APawn
 {
 	GENERATED_BODY()
@@ -48,6 +48,8 @@ protected:
 	// All the elements in snake's tail
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		TArray<ATailElement*> TailElements;
+	//Size of step for snake movement
+	int32 StepSize = 60;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		bool isFirst = true;
@@ -63,6 +65,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		TSubclassOf<ATailElement> TailElementToSpawn;
 
+	// Location of last added tail element
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TailMovementLogic")
+		FVector SnakePrevLocation;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -76,10 +82,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 GetScores();
 
-	UFUNCTION(BlueprintCallable)
 	void EatFood();
 
 	void AddTailElement();
 
 	FTransform GetElementTransform();
+
+	void MoveTail();
 };
