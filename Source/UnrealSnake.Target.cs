@@ -11,5 +11,7 @@ public class UnrealSnakeTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 
 		ExtraModuleNames.AddRange( new string[] { "UnrealSnake" } );
-	}
+		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+
+    }
 }
