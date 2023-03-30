@@ -31,15 +31,13 @@ ASnakePawn::ASnakePawn()
 	SpringArmComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 50.0f), FRotator(0.0f, -30.0f, 0.0f));
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->TargetArmLength = 500.f;
-
-	//Last added tail element location by default is head location
-	LastAddedTransform = GetActorTransform();
 }
 
 // Called when the game starts or when spawned
 void ASnakePawn::BeginPlay()
 {
 	Super::BeginPlay();
+	//GetWorldTimerManager().SetTimer(TimerHandle, this, &ASnakePawn::MoveTail, 1.0f, true, 2.0f);
 }
 
 // Called every frame
@@ -47,9 +45,12 @@ void ASnakePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	 
-	//Logic of tail movement
 	SnakePrevLocation = GetActorLocation();
-	MoveTail();
+
+	if (!TailElements.IsEmpty())
+	{
+		MoveTail();
+	}
 }
 
 // Called to bind functionality to input
@@ -78,39 +79,40 @@ void ASnakePawn::AddTailElement()
 {
 	if (IsValid(TailElementToSpawn) && GetWorld())
 	{
-		LastAddedElement = GetWorld()->SpawnActor<ATailElement>(TailElementToSpawn, GetElementTransform());
-		TailElements.Add(LastAddedElement);
-	}
-}
+		FVector NewLocation;
 
-//Returns new transform for our newly added element
-FTransform ASnakePawn::GetElementTransform()
-{
-
-	if (isFirst)
-	{
-		isFirst = false;
-	}
-	else
-	{
 		if (LastAddedElement)
 		{
-			LastAddedTransform = LastAddedElement->GetActorTransform();
-			
-			FVector NewLocation = LastAddedTransform.GetLocation() - GetActorForwardVector() * StepSize;
-			LastAddedTransform.SetLocation(FVector(NewLocation.X, NewLocation.Y, 30));
+			NewLocation = LastAddedElement->GetActorLocation() - LastAddedElement->GetActorForwardVector() * StepSize;
 		}
+		else
+		{
+			NewLocation = GetActorLocation() - GetActorForwardVector() * StepSize;
 
+		}
+		NewLocation.Z = 0;
+		LastAddedElement = GetWorld()->SpawnActor<ATailElement>(TailElementToSpawn, NewLocation, FRotator(0,0,0));
+		TailElements.Add(LastAddedElement);
 	}
-	return LastAddedTransform;
 }
 
 void ASnakePawn::MoveTail()
 {
 	for (auto element: TailElements)
 	{
-		FVector NewLocation = SnakePrevLocation - ((SnakePrevLocation - GetActorLocation()).Normalize() * StepSize);
+		auto delta = SnakePrevLocation - element->GetActorLocation();
+		delta.Normalize();
+
+		FVector NewLocation = SnakePrevLocation - delta * StepSize;
+		NewLocation.Z = 0;
+		
+		FRotator NewRotation = element->GetActorRotation();
+		NewRotation.Yaw = UKismetMathLibrary::RadiansToDegrees(-atan2f(delta.X, delta.Y));
+
+		element->SetActorRotation(NewRotation);
 		element->SetActorLocation(NewLocation);
+
+		SnakePrevLocation = NewLocation;
 	}
 }
 

@@ -8,6 +8,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "TailElement.h"
 
@@ -49,7 +50,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		TArray<ATailElement*> TailElements;
 	//Size of step for snake movement
-	int32 StepSize = 60;
+	int32 StepSize = 100;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		bool isFirst = true;
@@ -69,6 +70,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TailMovementLogic")
 		FVector SnakePrevLocation;
 
+	FTimerHandle TimerHandle;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -85,8 +88,6 @@ public:
 	void EatFood();
 
 	void AddTailElement();
-
-	FTransform GetElementTransform();
 
 	void MoveTail();
 };

@@ -10,6 +10,7 @@ ATailElement::ATailElement()
 	PrimaryActorTick.bCanEverTick = true;
 
 	TailStaticMeshComponent = CreateDefaultSubobject <UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	SetRootComponent(TailStaticMeshComponent);
 }
 
 // Called when the game starts or when spawned
