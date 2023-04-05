@@ -11,6 +11,7 @@ ASnakePawn::ASnakePawn()
 
 	//Create our components
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	SetRootComponent(CapsuleComponent);
 	SphereStaticMeshComponent = CreateDefaultSubobject <UStaticMeshComponent>(TEXT("SphereStaticMeshComponent"));
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
@@ -88,14 +89,15 @@ void ASnakePawn::AddTailElement()
 		else
 		{
 			NewLocation = GetActorLocation() - GetActorForwardVector() * StepSize;
-
 		}
 		NewLocation.Z = 0;
+
 		LastAddedElement = GetWorld()->SpawnActor<ATailElement>(TailElementToSpawn, NewLocation, FRotator(0,0,0));
 		TailElements.Add(LastAddedElement);
 	}
 }
 
+//Moves tail elements one by one during Snake head movement
 void ASnakePawn::MoveTail()
 {
 	for (auto element: TailElements)

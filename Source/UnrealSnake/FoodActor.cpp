@@ -10,6 +10,7 @@ AFoodActor::AFoodActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	FoodMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FoodMeshComponent"));
+	SetRootComponent(FoodMeshComponent);
 	bool b = FoodMeshComponent->GetGenerateOverlapEvents();
 	FoodMeshComponent->SetGenerateOverlapEvents(true);
 	FoodMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AFoodActor::OnFoodOverlapBegin);

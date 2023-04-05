@@ -70,8 +70,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TailMovementLogic")
 		FVector SnakePrevLocation;
 
-	FTimerHandle TimerHandle;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
