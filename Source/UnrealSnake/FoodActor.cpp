@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "FoodActor.h"
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "SnakePawn.h"
 
 // Sets default values
 AFoodActor::AFoodActor()
@@ -11,7 +14,6 @@ AFoodActor::AFoodActor()
 
 	FoodMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FoodMeshComponent"));
 	SetRootComponent(FoodMeshComponent);
-	bool b = FoodMeshComponent->GetGenerateOverlapEvents();
 	FoodMeshComponent->SetGenerateOverlapEvents(true);
 	FoodMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AFoodActor::OnFoodOverlapBegin);
 }

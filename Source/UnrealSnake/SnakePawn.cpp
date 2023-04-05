@@ -1,7 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "SnakePawn.h"
+
+#include "CoreMinimal.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "TailElement.h"
+#include "Algo/Reverse.h"
+
+
 
 // Sets default values
 ASnakePawn::ASnakePawn()

@@ -2,12 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "FoodActor.h"
-
 #include "FoodActorSpawner.generated.h"
+
+class AFoodActor;
 
 UCLASS()
 class UNREALSNAKE_API AFoodActorSpawner : public AActor

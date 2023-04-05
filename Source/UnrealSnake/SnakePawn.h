@@ -2,17 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
-#include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-
-#include "TailElement.h"
-
 #include "SnakePawn.generated.h"
+
+class TailElement;
 
 UCLASS()
 class UNREALSNAKE_API ASnakePawn : public APawn

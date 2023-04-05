@@ -2,10 +2,6 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "SnakePawn.h"
-
 #include "FoodActor.generated.h"
 
 UCLASS()
