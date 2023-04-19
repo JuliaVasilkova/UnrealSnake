@@ -35,8 +35,7 @@ void AFoodActor::OnFoodOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 {
 	if (OtherActor && (OtherActor != this) && OtherActor->ActorHasTag("SnakeHead"))
 	{
-		ASnakePawn* Snake = Cast<ASnakePawn>(OtherActor);
-		Snake->EatFood();
+		Cast<ASnakePawn>(OtherActor)->EatFood();
 		Destroy();
 	}
 }
