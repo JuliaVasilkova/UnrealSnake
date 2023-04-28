@@ -35,12 +35,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UFloatingPawnMovement* MoveComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SnakePawnLogic")
 		int32 Scores =  0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SnakePawnLogic")
+		bool shouldRestart = false;
 
 	// All the elements in snake's tail
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		TArray<class ATailElement*> TailElements;
+
 	//Size of step for snake movement
 	int32 StepSize = 100;
 
@@ -62,9 +66,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TailMovementLogic")
 		FVector SnakePrevLocation;
 
-
-	FTimerHandle SnakeTimerHandle;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -77,6 +78,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetScores();
+
+	// declare overlap begin function
+	UFUNCTION()
+	void OnTailOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void EatFood();
 

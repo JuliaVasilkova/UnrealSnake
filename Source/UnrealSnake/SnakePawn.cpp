@@ -9,6 +9,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "TailElement.h"
 #include "Algo/Reverse.h"
 
@@ -43,12 +45,17 @@ ASnakePawn::ASnakePawn()
 	SpringArmComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 50.0f), FRotator(0.0f, -30.0f, 0.0f));
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->TargetArmLength = 500.f;
+
+	Tags.Add(FName("SnakeHead"));
 }
 
 // Called when the game starts or when spawned
 void ASnakePawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &ASnakePawn::OnTailOverlapBegin);
+
 	//GetWorldTimerManager().SetTimer(TimerHandle, this, &ASnakePawn::MoveTail, 1.0f, true, 2.0f);
 }
 
@@ -77,6 +84,18 @@ int32 ASnakePawn::GetScores()
 	return Scores;
 }
 
+
+void ASnakePawn::OnTailOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && (OtherActor != this) && OtherActor->ActorHasTag("TailElement"))
+	{
+		DeleteTail();
+		Scores = 0;
+		shouldRestart = true;
+
+		//UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
+	}
+}
 
 //Precess of eating food and adding scores
 void ASnakePawn::EatFood()
@@ -127,6 +146,15 @@ void ASnakePawn::MoveTail()
 
 		SnakePrevLocation = NewLocation;
 	}
+}
+
+void ASnakePawn::DeleteTail()
+{
+	for (auto element : TailElements)
+	{
+		Cast<ATailElement>(element)->Destroy();
+	}
+	TailElements.Empty();
 }
 
 void ASnakePawn::UpdateScores()

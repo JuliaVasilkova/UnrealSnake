@@ -17,7 +17,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ActorToSpawn")
-		TSubclassOf<AFoodActor> FoodActorToSpawn;
+	TSubclassOf<AFoodActor> FoodActorToSpawn;
 
 protected:
 	// Called when the game starts or when spawned

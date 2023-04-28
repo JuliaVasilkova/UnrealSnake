@@ -15,13 +15,15 @@ AFoodActor::AFoodActor()
 	FoodMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FoodMeshComponent"));
 	SetRootComponent(FoodMeshComponent);
 	FoodMeshComponent->SetGenerateOverlapEvents(true);
-	FoodMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AFoodActor::OnFoodOverlapBegin);
+
 }
 
 // Called when the game starts or when spawned
 void AFoodActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FoodMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AFoodActor::OnFoodOverlapBegin);
 }
 
 // Called every frame
