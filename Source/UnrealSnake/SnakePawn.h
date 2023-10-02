@@ -41,30 +41,25 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SnakePawnLogic")
 		bool shouldRestart = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
+		TSubclassOf<class ATailElement> TailElementToSpawn;
+
 	// All the elements in snake's tail
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
-		TArray<class ATailElement*> TailElements;
+	TArray<class ATailElement*> TailElements;
 
 	//Size of step for snake movement
 	int32 StepSize = 100;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
-		bool isFirst = true;
+	bool isFirst = true;
 
-	// Location of last added tail element
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
-		FTransform LastAddedTransform;
+	FTransform LastAddedTransform;
 
-	// Location of last added tail element
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
-		class ATailElement* LastAddedElement = NULL;
+	class ATailElement* LastAddedElement = NULL;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
-		TSubclassOf<class ATailElement> TailElementToSpawn;
+	FVector SnakePrevLocation;
 
-	// Location of last added tail element
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TailMovementLogic")
-		FVector SnakePrevLocation;
+	// For moving tail elements
+	mutable FCriticalSection TailMovementCriticalSection;
 
 public:	
 	// Called every frame

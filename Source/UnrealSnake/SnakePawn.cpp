@@ -63,8 +63,8 @@ void ASnakePawn::BeginPlay()
 void ASnakePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	 
-	SnakePrevLocation = GetActorLocation();
+
+	SetActorLocation(GetActorLocation() + (Scores + 1) * 1.2 * GetActorForwardVector());
 
 	if (!TailElements.IsEmpty())
 	{
@@ -87,13 +87,13 @@ int32 ASnakePawn::GetScores()
 
 void ASnakePawn::OnTailOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && (OtherActor != this) && OtherActor->ActorHasTag("TailElement"))
+	if (OtherActor && (OtherActor != this) && (OtherActor->ActorHasTag("TailElement") || OtherActor->ActorHasTag("Wall")))
 	{
 		DeleteTail();
 		Scores = 0;
 		shouldRestart = true;
 
-		//UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
+		UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
 	}
 }
 
@@ -114,7 +114,7 @@ void ASnakePawn::AddTailElement()
 
 		if (LastAddedElement)
 		{
-			NewLocation = LastAddedElement->GetActorLocation() - LastAddedElement->GetActorForwardVector() * StepSize;
+			NewLocation = LastAddedElement->GetActorLocation() - GetActorForwardVector() * StepSize;
 		}
 		else
 		{
@@ -122,7 +122,7 @@ void ASnakePawn::AddTailElement()
 		}
 		NewLocation.Z = 0;
 
-		LastAddedElement = GetWorld()->SpawnActor<ATailElement>(TailElementToSpawn, NewLocation, FRotator(0,0,0));
+		LastAddedElement = GetWorld()->SpawnActor<ATailElement>(TailElementToSpawn, FTransform(NewLocation));
 		TailElements.Add(LastAddedElement);
 	}
 }
@@ -130,6 +130,10 @@ void ASnakePawn::AddTailElement()
 //Moves tail elements one by one during Snake head movement
 void ASnakePawn::MoveTail()
 {
+	FScopeLock Lock(&TailMovementCriticalSection);
+
+	SnakePrevLocation = GetActorLocation();
+
 	for (auto element: TailElements)
 	{
 		auto delta = SnakePrevLocation - element->GetActorLocation();
