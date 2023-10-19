@@ -39,7 +39,7 @@ protected:
 		int32 Scores =  0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SnakePawnLogic")
-		bool shouldRestart = false;
+		bool ShouldRestart = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TailElementsLogic")
 		TSubclassOf<class ATailElement> TailElementToSpawn;

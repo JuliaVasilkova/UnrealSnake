@@ -64,7 +64,8 @@ void ASnakePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SetActorLocation(GetActorLocation() + (Scores + 1) * 1.2 * GetActorForwardVector());
+	//We should think how to manage snake speed
+	SetActorLocation(GetActorLocation() + 5 * GetActorForwardVector());
 
 	if (!TailElements.IsEmpty())
 	{
@@ -89,9 +90,11 @@ void ASnakePawn::OnTailOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 {
 	if (OtherActor && (OtherActor != this) && (OtherActor->ActorHasTag("TailElement") || OtherActor->ActorHasTag("Wall")))
 	{
+		FScopeLock Lock(&TailMovementCriticalSection);
+
 		DeleteTail();
 		Scores = 0;
-		shouldRestart = true;
+		ShouldRestart = true;
 
 		UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
 	}
@@ -130,6 +133,13 @@ void ASnakePawn::AddTailElement()
 //Moves tail elements one by one during Snake head movement
 void ASnakePawn::MoveTail()
 {
+	TRACE_CPUPROFILER_EVENT_SCOPE(MoveTail);
+
+	if (TailElements.Num() < 1)
+	{
+		return;
+	}
+
 	FScopeLock Lock(&TailMovementCriticalSection);
 
 	SnakePrevLocation = GetActorLocation();
