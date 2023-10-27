@@ -3,6 +3,7 @@ Saved/
 .vs/
 Intermediate/
 .vsconfig
+*.sln
 Binaries/
 Build/
 enc_temp_folder/
