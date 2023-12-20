@@ -6,6 +6,9 @@
 
 class TailElement;
 
+// Delegates
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScoresChangedDelegate);
+
 UCLASS()
 class UNREALSNAKE_API ASnakePawn : public APawn
 {
@@ -77,6 +80,14 @@ public:
 	// declare overlap begin function
 	UFUNCTION()
 	void OnTailOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// ----------------------------------------------------------------------------------------
+	// Broadcast event for scores' update
+	UPROPERTY(BlueprintAssignable)
+	FScoresChangedDelegate OnScoresChangedEvent;
+	// ----------------------------------------------------------------------------------------
+
+public:
 
 	void EatFood();
 

@@ -174,5 +174,6 @@ void ASnakePawn::DeleteTail()
 void ASnakePawn::UpdateScores()
 {
 	Scores++;
+	OnScoresChangedEvent.Broadcast();
 }
 
